@@ -4,7 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-from sign.models import Event
+from sign.models import Event, Guest
 
 
 def index(request):
@@ -30,15 +30,31 @@ def login_action(request):
 @login_required
 def event_manage(request):
     u"""发布会管理"""
-    event_list = Event.objects.all()
     # return render(request, "event_manage.html")
     # username = request.COOKIES.get('user', '')   # 读取浏览器cookie
     username = request.session.get('user', '')  # 读取浏览器session
+    event_list = Event.objects.all()
     return render(request, "event_manage.html", {"user": username, "events": event_list})
 
 @login_required
 def search_name(request):
+    u'''发布会搜索'''
     username = request.session.get('user', '')
-    search_name = request.GET.get("name", "")
-    event_list = Event.objects.filter(name__contains=search_name)
+    name = request.GET.get("name", "")
+    event_list = Event.objects.filter(name__contains=name)
     return render(request, "event_manage.html", {"user": username, "events": event_list})
+
+@login_required
+def guest_manage(request):
+    u'''嘉宾管理'''
+    username = request.session.get('user', '')
+    guest_list = Guest.objects.all()
+    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
+
+@login_required
+def search_phone(request):
+    u'''嘉宾搜索'''
+    username = request.session.get('user', '')
+    phone = request.GET.get("phone", "")
+    guest_list = Guest.objects.filter(name__contains=phone)
+    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
