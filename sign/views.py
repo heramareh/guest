@@ -56,5 +56,6 @@ def search_phone(request):
     u'''嘉宾搜索'''
     username = request.session.get('user', '')
     phone = request.GET.get("phone", "")
-    guest_list = Guest.objects.filter(name__contains=phone)
+    print (phone)
+    guest_list = Guest.objects.filter(phone__contains=phone)
     return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
