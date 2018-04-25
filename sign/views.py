@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 from sign.models import Event, Guest
 
@@ -49,8 +49,16 @@ def search_name(request):
 def guest_manage(request):
     u'''嘉宾管理'''
     username = request.session.get('user', '')
-    guest_list = Guest.objects.all()
-    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
+    guest_list = Guest.objects.all().order_by('id')
+    paginator = Paginator(guest_list, 2)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+    return render(request, "guest_manage.html", {"user": username, "guests": contacts})
 
 @login_required
 def search_phone(request):
@@ -59,5 +67,13 @@ def search_phone(request):
     name = request.GET.get("name", "")
     # guest_list = Guest.objects.filter(phone__icontains=name)
     # select * from Guest join Event on Guest.event_id = Event.id where Guest.phone like '%name%' or Guest.name like '%name%'
-    guest_list = Guest.objects.filter(Q(phone__icontains=name) | Q(event_id__name__icontains=name))
-    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
+    guest_list = Guest.objects.filter(Q(phone__icontains=name) | Q(event_id__name__icontains=name)).order_by('id')
+    paginator = Paginator(guest_list, 2)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
+    return render(request, "guest_manage.html", {"user": username, "guests": contacts, "search_value": name})
