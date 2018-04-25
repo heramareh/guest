@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
@@ -41,7 +42,7 @@ def search_name(request):
     u'''发布会搜索'''
     username = request.session.get('user', '')
     name = request.GET.get("name", "")
-    event_list = Event.objects.filter(name__contains=name)
+    event_list = Event.objects.filter(name__icontains=name)
     return render(request, "event_manage.html", {"user": username, "events": event_list})
 
 @login_required
@@ -55,7 +56,8 @@ def guest_manage(request):
 def search_phone(request):
     u'''嘉宾搜索'''
     username = request.session.get('user', '')
-    phone = request.GET.get("phone", "")
-    print (phone)
-    guest_list = Guest.objects.filter(phone__contains=phone)
+    name = request.GET.get("name", "")
+    # guest_list = Guest.objects.filter(phone__icontains=name)
+    # select * from Guest join Event on Guest.event_id = Event.id where Guest.phone like '%name%' or Guest.name like '%name%'
+    guest_list = Guest.objects.filter(Q(phone__icontains=name) | Q(event_id__name__icontains=name))
     return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
