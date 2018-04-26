@@ -102,3 +102,9 @@ def sign_index_action(request, eid):
     else:
         Guest.objects.filter(phone=phone, event_id=eid).update(sign='1')
         return render(request, 'sign_index.html', {'event': event, 'hint': 'sign in sucess.', 'guest': result})
+
+@login_required
+def logout(request):
+    auth.logout(request)
+    response = HttpResponseRedirect('/index/')
+    return response
