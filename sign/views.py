@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -77,3 +77,28 @@ def guest_search(request):
     except EmptyPage:
         contacts = paginator.page(paginator.num_pages)
     return render(request, "guest_manage.html", {"user": username, "guests": contacts, "search_value": name})
+
+@login_required
+def sign_index(request, eid):
+    u'''签到页面'''
+    event = get_object_or_404(Event, id=eid)
+    return render(request, 'sign_index.html', {'event': event})
+
+@login_required
+def sign_index_action(request, eid):
+    u'''签到页面'''
+    event = get_object_or_404(Event, id=eid)
+    phone = request.POST.get('phone', '')
+    result = Guest.objects.filter(phone=phone)
+    if not result:
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'phone error.'})
+    result = Guest.objects.filter(phone=phone, event_id=eid)
+    if not result:
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'event id or phone error.'})
+    result = Guest.objects.get(phone=phone, event_id=eid)
+    print (result.sign)
+    if result.sign:
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'user has sign in.'})
+    else:
+        Guest.objects.filter(phone=phone, event_id=eid).update(sign='1')
+        return render(request, 'sign_index.html', {'event': event, 'hint': 'sign in sucess.', 'guest': result})
