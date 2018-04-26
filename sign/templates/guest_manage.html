@@ -36,7 +36,7 @@
 		<!-- 嘉宾搜索表单 -->
 		<div class="page-header" style="padding-top: 60px;">
 			<div id="navbar" class="navbar-collapse collapse">
-				<form class="navbar-form" method="get" action="/search_phone/">
+				<form class="navbar-form" method="get" action="/guest_search/">
 					<div class="form-group">
 						<input name="name" type="text" placeholder="手机号/发布会名称" class="form-control" value="{{ search_value }}">
 					</div>
@@ -89,13 +89,21 @@
 		<div class="pagination">
 			<span class="step-links">
 				{% if guests.has_previous %}
-				<a href="?page={{ guests.previous_page_number }}">previous</a>
+				<a href="/guest_search/?name={{ search_value }}&page=1">首页</a>
+				<a href="/guest_search/?name={{ search_value }}&page={{ guests.previous_page_number }}" >上一页</a>
+				{% else %}
+				<span>首页</span>
+				<span>上一页</span>
 				{% endif %}
 				<span class="current">
-					Page {{ guests.number }} of {{ guests.paginator.num_pages }}.
+					第 {{ guests.number }} 页 共 {{ guests.paginator.num_pages }} 页
 				</span>
 				{% if guests.has_next %}
-				<a href="?page={{ guests.next_page_number }}">next</a>
+				<a href="/guest_search/?name={{ search_value }}&page={{ guests.next_page_number }}">下一页</a>
+				<a href="/guest_search/?name={{ search_value }}&page={{ guests.paginator.num_pages }}">尾页</a>
+				{% else %}
+				<span>下一页</span>
+				<span>尾页</span>
 				{% endif %}
 			</span>
 		</div>

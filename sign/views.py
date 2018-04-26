@@ -38,7 +38,7 @@ def event_manage(request):
     return render(request, "event_manage.html", {"user": username, "events": event_list})
 
 @login_required
-def search_name(request):
+def event_search(request):
     u'''发布会搜索'''
     username = request.session.get('user', '')
     name = request.GET.get("name", "")
@@ -61,7 +61,7 @@ def guest_manage(request):
     return render(request, "guest_manage.html", {"user": username, "guests": contacts})
 
 @login_required
-def search_phone(request):
+def guest_search(request):
     u'''嘉宾搜索'''
     username = request.session.get('user', '')
     name = request.GET.get("name", "")
