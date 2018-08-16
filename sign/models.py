@@ -1,6 +1,14 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
+'''
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, None)
+    desc = models.TextField()
+'''
+class User(AbstractUser):
+    desc = models.TextField()
+
 # 发布会表
 class Event(models.Model):
     # 发布会标题

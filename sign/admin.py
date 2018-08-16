@@ -1,8 +1,17 @@
 from django.contrib import admin
-from sign.models import Event, Guest
+# from django.contrib.auth.models import User
+from sign.models import Event, Guest, User
 # Register your models here.
 # admin.site.register(Event)
 # admin.site.register(Guest)
+'''
+class ProfileInline(admin.StackedInline):
+    model = UserProfile
+    verbose_name = 'profile'
+
+class UserAdmin(admin.ModelAdmin):
+   inlines = ()
+'''
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'status', 'address', 'start_time']
@@ -16,5 +25,6 @@ class GuestAdmin(admin.ModelAdmin):
     search_fields = ['realname', 'phone']
     list_filter = ['sign']
 
+admin.site.register(User)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Guest, GuestAdmin)

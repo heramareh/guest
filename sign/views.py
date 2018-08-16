@@ -1,12 +1,32 @@
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django import forms
 # Create your views here.
-from sign.models import Event, Guest
+from sign.models import Event, Guest, User
 
+class LoginForm(forms.Form):
+    email = forms.CharField(label="email:", max_length=50)
+    pwd = forms.CharField(label="password:", widget=forms.PasswordInput)
+
+def login(request):
+    if 'email' and 'pwd' not in request.GET:
+        lf = LoginForm()
+        return render_to_response('login.html',{'lf':lf})
+    lf = LoginForm(request.GET)
+    email = lf.data['email']
+    pwd = lf.data['pwd']
+    try:
+        user = User.objects.get(email=email)
+    except User.EMAIL_FIELD:
+        pass
+    else:
+        if user.check_password(pwd):
+            return HttpResponse("login in:" + user.email)
+    return HttpResponseRedirect("/login/")
 
 def index(request):
     # return HttpResponse("Hello Django!")
@@ -108,3 +128,4 @@ def logout(request):
     auth.logout(request)
     response = HttpResponseRedirect('/index/')
     return response
+

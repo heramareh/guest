@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^sign_index/(?P<eid>[0-9]+)$',views.sign_index),
     url(r'^sign_index_action/(?P<eid>[0-9]+)$', views.sign_index_action),
     url(r'^logout/$', views.logout),
+    url(r'^login/$', views.login, name='login')
 ]
