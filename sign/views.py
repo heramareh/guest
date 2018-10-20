@@ -116,7 +116,7 @@ def sign_index_action(request, eid):
     if not result:
         return render(request, 'sign_index.html', {'event': event, 'hint': 'event id or phone error.'})
     result = Guest.objects.get(phone=phone, event_id=eid)
-    print (result.sign)
+    # print (result.sign)
     if result.sign:
         return render(request, 'sign_index.html', {'event': event, 'hint': 'user has sign in.'})
     else:

@@ -8,6 +8,19 @@ class UserProfile(models.Model):
 '''
 class User(AbstractUser):
     desc = models.TextField()
+    # password = models.CharField(max_length=128)
+    # last_login = models.DateTimeField(auto_now=True)
+    # is_superuser = models.TextField(max_length=1)
+    # username = models.CharField(max_length=150,unique=True)
+    # first_name = models.CharField(max_length=30)
+    # last_name = models.CharField(max_length=150)
+    # email = models.EmailField()
+    # is_staff = models.BooleanField()
+    # is_active = models.BooleanField()
+    # date_joined = models.DateTimeField()
+    #
+    # def __str__(self):
+    #     return self.username
 
 # 发布会表
 class Event(models.Model):
